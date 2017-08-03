@@ -5,7 +5,12 @@ var FastTyping = function () //function object
         STATE_GAME = "game",
         STATE_GAME_OVER = "game_over";
 
-    var name, last_state, level, score;
+    var name, last_state, level, score, saveULR;
+
+    this.setSaveURL = function (value)
+    {
+        saveULR = value;
+    };
 
     function change_state(value) {
 
@@ -115,6 +120,7 @@ var FastTyping = function () //function object
     };
 
     var GameLogics = function () {
+
         var view = $('#game'),
             time_out,
             //interval = setInterval(900),
@@ -263,6 +269,9 @@ var FastTyping = function () //function object
             disable();
         };
         function enable() {
+
+            saveResult();
+
             $('.title').html(name);
 
             button.click(function () {
@@ -270,11 +279,28 @@ var FastTyping = function () //function object
             })
         }
 
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        function saveResult() {
+
+            $.ajax({
+                url: saveULR,
+                method: "POST",
+                data: {
+                    name: name,
+                    level: level,
+                    score: score
+                }
+            });
+        }
+
         function disable() {
             button.unbind();
         }
-
-
     };
 
     var register = new RegisterLogics(),

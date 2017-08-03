@@ -12,33 +12,31 @@
 
 
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Fast typing game</title>
 </head>
 <body>
-
 <div id="register" class="container hidden">
-    <div id="main_title" ><h2>Fast typing</h2></div>
+    <div id="main_title"><h2>Fast typing</h2></div>
     <div id="content">
         <input id="name" class="form-control" placeholder="Your name">
         <br><br>
         <button id="register_btn" class="btn btn-lg btn-danger" disabled>GO</button>
     </div>
 </div>
-
 <div id="levels" class="container hidden">
     <div class="title"></div>
     <div class="content">
         <h2>Choose level</h2>
         <form action="levels">
-            <input type="radio" name ="levels" id="level_3" value="6" class="radio-inline"> 6
-            <input type="radio" name ="levels" id="level_2" value="4" class="radio-inline"> 4
-            <input type="radio" name ="levels" id="level_1" value="2" class="radio-inline"> 2
+            <input type="radio" name="levels" id="level_3" value="6" class="radio-inline"> Easy
+            <input type="radio" name="levels" id="level_2" value="4" class="radio-inline"> Medium
+            <input type="radio" name="levels" id="level_1" value="2" class="radio-inline"> Hard
         </form>
         <br><br>
         <button id="start" class="btn btn-success">Start</button>
     </div>
 </div>
-
 <div id="game" class="container hidden">
     <div class="row justify-content-center">
         <div class="col-3 score text-left"></div>
@@ -52,7 +50,6 @@
         <div>Lives left: <span id="life">3</span></div>
     </div>
 </div>
-
 <div id="results" class="container hidden">
     <div class="title"></div>
     <div class="content">
@@ -60,8 +57,12 @@
         <div>Your score is: <span id="lastScore"></span></div>
         <br><br>
         <button id="reset" class="btn btn-success">START NEW</button>
+        <input type="button" class="btn" value="Save result">
+
     </div>
 </div>
+
+@yield('results')
 
 
 </body>
@@ -73,8 +74,15 @@
 <script src="js/main.js"></script>
 
 <script>
-    new FastTyping();
+    var game = new FastTyping();
+        game.setSaveURL ("{{route('app.results.store')}}");
 </script>
 
+<script>
+
+
+
+
+</script>
 
 </html>
