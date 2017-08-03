@@ -49,3 +49,6 @@
 #main_title, .title, .score, .level, .form-control {
     font-family: "Comic Sans MS";
 }
+.golden{
+    color: yellow;
+}

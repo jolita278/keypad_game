@@ -5,7 +5,7 @@ var FastTyping = function () //function object
         STATE_GAME = "game",
         STATE_GAME_OVER = "game_over";
 
-    var name, last_state, level;
+    var name, last_state, level, score;
 
     function change_state(value) {
 
@@ -81,7 +81,8 @@ var FastTyping = function () //function object
             button.addClass('btn-danger');
             button.removeClass('btn-success');
         }
-    }
+    };
+
     var LevelSelectLogics = function () {
         var view = $('#levels'),
             button = $('#start');
@@ -90,12 +91,12 @@ var FastTyping = function () //function object
         this.show = function () {//remove class hidden from register view
             view.removeClass('hidden');
             enable();
-        }
+        };
 
         this.hide = function () { //add class hidden for register view
             view.addClass('hidden');
             disable();
-        }
+        };
 
         function enable() {
             $('.title').html(name);
@@ -111,58 +112,141 @@ var FastTyping = function () //function object
         function disable() {
             button.unbind();
         }
-    }
+    };
 
     var GameLogics = function () {
         var view = $('#game'),
-            button = $('#stop'),
             time_out,
             //interval = setInterval(900),
-            letters = "ABCDEFGHIKLMNOPQRSTVXYZabcdefghijklmnopqrstuvwxyz",
+           // letters = "ABCDEFGHIKLMNOPQRSTVXYZabcdefghijklmnopqrstuvwxyz",
+            letters = "abcdefghijklmnopqrstuvwxyz",
             letter_key,
-            letterPlacement = $('#letter');
-            clearInterval();
+            letterPlacement = $('#letter'),
+            lifeCount,
+            userInput,
+            userLevel = $('#user-level'),
+            letterAppearance,
+            keyUpTime,
+            timeAmount,
+            isGolden;
+
+        // clearInterval();
 
         this.show = function () {//remove class hidden from register view
+            lifeCount = 3;
+            $('#life').html(lifeCount); //TODO
+            userInput = true;
+            score = 0;
             view.removeClass('hidden');
+            userLevel.html('<h4>You have ' + level + ' seconds to type the letter you see</h4>');// todo
+            changeLetter();
             enable();
-        }
+        };
 
         this.hide = function () { //add class hidden for register view
             view.addClass('hidden');
-            // disable();
-        }
-        function enable(){
-            $('.score').html('00001');
-            $('.level').html("LEVEL " + level);
-            $('.title').html(name);
+            disable();
+        };
+        function updateScore() {
 
-            time_out = setTimeout(changeLetter, level*500);
-
-            switch (level) {
-                case "3":
-                    $('.level').html("LEVEL " + level);
-                    break;
-
-                case "6":
-                    $('.level').html("LEVEL " + level);
-                    break;
-
-                case "9":
-                    $('.level').html("LEVEL " + level);
-                    break;
-
-                default:
-
+            if (isGolden) {
+                isGolden = false;
+                for (i = 0; i < 5; i++) {
+                    updateScore();
+                }
+            } else {
+                score += 1;
             }
-            function changeLetter(){
-                letter_key = Math.round(Math.random()*(letters.length -1));
-                letterPlacement.html(letters[letter_key]);
 
+            if (score % 20 === 0) {
+
+                lifeCount += 1;
+                $('#life').html(lifeCount);//todo
             }
+
+            $('#score').html(score);//todo
         }
 
-    }
+
+        function removeLife() {
+
+            lifeCount -= 1;
+            $('#life').html(lifeCount);//todo
+
+            if (lifeCount === 0)
+                change_state(STATE_GAME_OVER);
+        }
+
+        function enable() {
+            //     $('.score').html('00001');
+            //     $('.level').html("LEVEL " + level);
+            //     $('.title').html(name);
+            //
+            //     time_out = setTimeout(changeLetter, level * 500);
+            //
+            //     function changeLetter() {
+            //         letter_key = Math.round(Math.random() * (letters.length - 1));
+            //         letterPlacement.html(letters[letter_key]);
+            //
+            //     }
+            // }
+            $(window).keyup(
+                function (e) {
+
+                    if (e.key === letters[letter_key]) {
+                        updateScore()
+                    } else {
+                        removeLife()
+                    }
+
+                    keyUpTime = Date.now();
+
+                    userInput = true;
+                    changeLetter();
+
+                    timeAmount = (letterAppearance - keyUpTime);
+                    console.log(keyUpTime, letterAppearance, timeAmount);
+
+                }
+            )
+        }
+
+        function disable() {
+            $(window).unbind();
+            clearTimeout(time_out);
+        }
+
+        function changeLetter() {
+
+
+            if (!userInput) {
+                removeLife();
+            }
+            clearTimeout(time_out);
+
+
+            if (lifeCount <= 0) {
+                return;
+
+            }
+            if (Math.random() < 0.1) {
+                isGolden = true;
+                letterPlacement.addClass('golden');
+
+            } else {
+                isGolden = false;
+                letterPlacement.removeClass('golden');
+            }
+            userInput = false;
+            time_out = setTimeout(changeLetter, level * 1000);
+            letter_key = Math.round(Math.random() * (letters.length - 1));
+            letterPlacement.html(letters[letter_key]);
+
+            letterAppearance = Date.now();
+        }
+
+    };
+
 
     var Results = function () {
         var view = $('#results'),
@@ -170,13 +254,14 @@ var FastTyping = function () //function object
 
         this.show = function () {//remove class hidden from register view
             view.removeClass('hidden');
+            $('#lastScore').html(score);
             enable();
-        }
+        };
 
         this.hide = function () { //add class hidden for register view
             view.addClass('hidden');
             disable();
-        }
+        };
         function enable() {
             $('.title').html(name);
 
@@ -190,7 +275,7 @@ var FastTyping = function () //function object
         }
 
 
-    }
+    };
 
     var register = new RegisterLogics(),
         select_level = new LevelSelectLogics(),
@@ -201,7 +286,7 @@ var FastTyping = function () //function object
     change_state(STATE_REGISTER);
 
     //initialize()
-}
+};
 
 function initialize() {
 
