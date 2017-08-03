@@ -12,7 +12,7 @@
 
 
     <meta charset="UTF-8">
-    <title>Key pad game</title>
+    <title>Fast typing game</title>
 </head>
 <body>
 
