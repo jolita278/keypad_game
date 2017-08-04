@@ -56,14 +56,12 @@
         <h2>GAME OVER!</h2>
         <div>Your score is: <span id="lastScore"></span></div>
         <br><br>
-        <button id="reset" class="btn btn-success">START NEW</button>
-        <input type="button" class="btn" value="Save result">
-
+        <button id="reset" class="btn btn-success">PLAY AGAIN</button>
+        <a href="{{route('app.results.index')}}" class="button btn btn-default">RESULTS</a>
     </div>
 </div>
 
 @yield('results')
-
 
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -76,13 +74,6 @@
 <script>
     var game = new FastTyping();
         game.setSaveURL ("{{route('app.results.store')}}");
-</script>
-
-<script>
-
-
-
-
 </script>
 
 </html>
