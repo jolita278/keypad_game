@@ -36,6 +36,8 @@ class PlayerGameDataController extends Controller
             'name' => $data['name'],
             'level' => $data['level'],
             'score' => $data['score'],
+            'time' => $data['time'],
+            'average_speed' => $data['average_speed'],
         ));
 
         return view('results');

@@ -8,6 +8,7 @@
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Architects+Daughter|Permanent+Marker" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
 
 
@@ -17,6 +18,9 @@
 </head>
 <body>
 <div id="register" class="container hidden">
+
+    <a href="{{route('app.results.index')}}">CHECK, IF ARE YOU IN THE BEST PLAYERS LIST!</a>
+
     <div id="main_title"><h2>Fast typing</h2></div>
     <div id="content">
         <input id="name" class="form-control" placeholder="Your name">

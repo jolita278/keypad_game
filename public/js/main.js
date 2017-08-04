@@ -5,13 +5,15 @@ var FastTyping = function () //function object
         STATE_GAME = "game",
         STATE_GAME_OVER = "game_over";
 
-    var name, last_state, level, score, saveULR;
+    var name, last_state, level, score, saveULR, start_game, end_game, time, average_spped, letterAppearance, key_press_time;
 
-    this.setSaveURL = function (value)
-    {
+    var key_up_count = 0, time_count = 0;
+
+
+    this.setSaveURL = function (value) {
         saveULR = value;
     };
-
+//------------------------------------CHANGE STATE---------------------------------------
     function change_state(value) {
 
         if (last_state)
@@ -40,6 +42,7 @@ var FastTyping = function () //function object
         last_state.show();//shows new last_state object
     }
 
+    //---------------------------------------------REGISTER------------------------------------------
     var RegisterLogics = function () {
         var view = $('#register'),
             input = $('#name'),
@@ -87,6 +90,7 @@ var FastTyping = function () //function object
             button.removeClass('btn-success');
         }
     };
+    //----------------------------------------SELECT LEVEL----------------------------------------------
 
     var LevelSelectLogics = function () {
         var view = $('#levels'),
@@ -109,7 +113,7 @@ var FastTyping = function () //function object
 
             button.click(function () {
                 level = $("input:radio[name=levels]:checked").val();
-
+                start_game = Date.now();
                 change_state(STATE_GAME);
             });
         }
@@ -118,22 +122,20 @@ var FastTyping = function () //function object
             button.unbind();
         }
     };
+    //----------------------------------GAME---------------------------------------------
 
     var GameLogics = function () {
 
         var view = $('#game'),
             time_out,
-            //interval = setInterval(900),
-           // letters = "ABCDEFGHIKLMNOPQRSTVXYZabcdefghijklmnopqrstuvwxyz",
             letters = "abcdefghijklmnopqrstuvwxyz",
             letter_key,
             letterPlacement = $('#letter'),
             lifeCount,
             userInput,
             userLevel = $('#user-level'),
-            letterAppearance,
             keyUpTime,
-            timeAmount,
+
             isGolden;
 
         // clearInterval();
@@ -179,39 +181,31 @@ var FastTyping = function () //function object
             lifeCount -= 1;
             $('#life').html(lifeCount);//todo
 
-            if (lifeCount === 0)
+            if (lifeCount === 0) {
+                end_game = Date.now();
+                game_time();
                 change_state(STATE_GAME_OVER);
+            }
         }
 
         function enable() {
-            //     $('.score').html('00001');
-            //     $('.level').html("LEVEL " + level);
-            //     $('.title').html(name);
-            //
-            //     time_out = setTimeout(changeLetter, level * 500);
-            //
-            //     function changeLetter() {
-            //         letter_key = Math.round(Math.random() * (letters.length - 1));
-            //         letterPlacement.html(letters[letter_key]);
-            //
-            //     }
-            // }
             $(window).keyup(
                 function (e) {
 
                     if (e.key === letters[letter_key]) {
-                        updateScore()
+                        key_press_time = Date.now();
+                        key_up_count = key_up_count+1;
+                        speed();
+
+                        updateScore();
                     } else {
-                        removeLife()
+                        removeLife();
                     }
 
                     keyUpTime = Date.now();
 
                     userInput = true;
                     changeLetter();
-
-                    timeAmount = (letterAppearance - keyUpTime);
-                    console.log(keyUpTime, letterAppearance, timeAmount);
 
                 }
             )
@@ -224,16 +218,13 @@ var FastTyping = function () //function object
 
         function changeLetter() {
 
-
             if (!userInput) {
                 removeLife();
             }
             clearTimeout(time_out);
 
-
             if (lifeCount <= 0) {
                 return;
-
             }
             if (Math.random() < 0.1) {
                 isGolden = true;
@@ -250,10 +241,20 @@ var FastTyping = function () //function object
 
             letterAppearance = Date.now();
         }
-
     };
 
+    function game_time() {
+        time = (end_game - start_game) * 0.001;
+    }
 
+    function speed(){
+        average_spped = (key_press_time - letterAppearance);
+        time_count = time_count + average_spped;
+        average_spped = (time_count/key_up_count)*0.001;
+
+        console.log(letterAppearance, key_press_time, average_spped);
+    }
+//------------------------------------------------GAME OVER-------------------------------------------
     var Results = function () {
         var view = $('#results'),
             button = $('#reset');
@@ -279,6 +280,7 @@ var FastTyping = function () //function object
             })
         }
 
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -293,7 +295,9 @@ var FastTyping = function () //function object
                 data: {
                     name: name,
                     level: level,
-                    score: score
+                    score: score,
+                    time: time,
+                    average_speed: average_spped
                 }
             });
         }
@@ -314,29 +318,3 @@ var FastTyping = function () //function object
     //initialize()
 };
 
-function initialize() {
-
-}
-
-function openLevel(evt, levelName) {
-
-// Declare all variables
-    var i, tabcontent, tablinks;
-
-// Get all elements with class="tabcontent" and hide them
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-
-// Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-
-// Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(levelName).style.display = "block";
-    evt.currentTarget.className += " active";
-}
-document.getElementById("defaultOpen").click();

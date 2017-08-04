@@ -18,9 +18,11 @@
     height: 40px;
     font-size: x-large;
 }
-
 .btn {
-    width: 25%;
+width: 25%;
+}
+a{
+    color: green;
 }
 
 #name {
@@ -45,8 +47,10 @@
 
 }
 
-#main_title, .title, .score, .level, .form-control {
-    font-family: "Comic Sans MS";
+body {
+    font-family: 'Architects Daughter', cursive;
+    background: url(https://img2.goodfon.com/original/1920x1200/0/7a/prazdnik-den-vseh-svyatyh.jpg) no-repeat;
+
 }
 .golden{
     color: yellow;
@@ -55,8 +59,9 @@
 /* Style the tab */
 div.tab {
     overflow: hidden;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     background-color: #f1f1f1;
+    border-radius:  25px  25px 0px 0px ;
 }
 
 /* Style the buttons inside the tab */
@@ -72,12 +77,12 @@ div.tab button {
 
 /* Change background color of buttons on hover */
 div.tab button:hover {
-    background-color: #ddd;
+    background-color: #ccc;
 }
 
 /* Create an active/current tablink class */
 div.tab button.active {
-    background-color: #ccc;
+    background-color: #ddd;
 }
 
 /* Style the tab content */
@@ -86,4 +91,6 @@ div.tab button.active {
     padding: 6px 12px;
     border: 1px solid #ccc;
     border-top: none;
+    background-color: #ddd;
+    border-radius: 0px 0px 25px  25px ;
 }
