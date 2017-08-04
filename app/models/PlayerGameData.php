@@ -9,7 +9,7 @@ class PlayerGameData extends CoreModel
      * @var string
      */
     protected $table = 'player_game_data';
-
+    protected $hidden = ['count', 'id', 'deleted_at','created_at', 'updated_at'];
     /**
      * Fields which will be manipulated
      * @var array
