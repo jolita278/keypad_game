@@ -13,20 +13,12 @@ class PlayerGameDataController extends Controller
      *
      * @return Response
      */
-    public function index()
-    {
-        return view('results');
-    }
+    public function index(){
+        $config['list2'] = PlayerGameData::where('level', '2')->orderBy('score', 'desc')->take(3)->get()->toArray();
+        $config['list4'] = PlayerGameData::where('level', '4')->orderBy('score', 'desc')->take(3)->get()->toArray();
+        $config['list6'] = PlayerGameData::where('level', '6')->orderBy('score', 'desc')->take(3)->get()->toArray();
 
-    /**
-     * Show the form for creating a new resource.
-     * GET /playergamedata/create
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
+        return view('results', $config);
     }
 
     /**
@@ -48,31 +40,6 @@ class PlayerGameDataController extends Controller
 
         return view('results');
 
-    }
-
-    /**
-     * Display the specified resource.
-     * GET /playergamedata/{id}
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-
-    /**
-     * Remove the specified resource from storage.
-     * DELETE /playergamedata/{id}
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 
 }
